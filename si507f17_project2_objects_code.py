@@ -1,3 +1,5 @@
+# Mengying Zhang
+# uniqname: zhangmen
 # coding=utf-8
 ## SI 507 F17 Project 2 - Objects
 import requests
@@ -86,6 +88,27 @@ print("\n***** PROBLEM 1 *****\n")
 ## - a special len method, which, for the Media class, returns 0 no matter what. (The length of an audiobook might mean something different from the length of a song, depending on how you want to define them!)
 ## - a special contains method (for the in operator) which takes one additional input, as all contains methods must, which should always be a string, and checks to see if the string input to this contains method is INSIDE the string representing the title of this piece of media (the title instance variable)
 
+class Media(object):
+    def __init__(self, media_dict):
+        self.title = media_dict["trackName"]
+        self.author = media_dict["artistName"]
+        self.itunes_URL = media_dict["trackViewUrl"]
+        self.itunes_id = media_dict["trackId"]
+        
+    def __str__(self):
+        return "{} by {}".format(self.title, self.author)
+        
+    def __repr__(self):
+        return "ITUNES MEDIA: {}".format(self.itunes_id)
+        
+    def len(self):
+        return 0
+        
+    def __contains__(self, titlename):
+        result = titlename in self.title
+        return result
+        
+        
 
 
 ## [PROBLEM 2] [400 POINTS]
@@ -108,7 +131,16 @@ print("\n***** PROBLEM 2 *****\n")
 ## - genre (the primary genre name from the data iTunes gives you)
 
 ## Should have the len method overridden to return the number of seconds in the song. (HINT: The data supplies number of milliseconds in the song... How can you access that data and convert it to seconds?)
-
+class Song(Media):
+    def __init__(self,media_dict):
+        Media.__init__(self, media_dict)
+        self.album = media_dict["collectionName"]
+        self.track_number = media_dict["trackNumber"]
+        self.genre = media_dict["primaryGenreName"]
+        self.time = media_dict["trackTimeMillis"]
+        
+    def len(self):
+        return (self.time/1000)
 
 
 ### class Movie:
@@ -122,8 +154,20 @@ print("\n***** PROBLEM 2 *****\n")
 ## Should have the len method overridden to return the number of minutes in the movie (HINT: The data returns the number of milliseconds in the movie... how can you convert that to minutes?)
 
 ## Should have an additional method called title_words_num that returns an integer representing the number of words in the movie description. If there is no movie description, this method should return 0.
-
-
+class Movie(Media):
+    def __init__(self,media_dict):
+        Media.__init__(self,media_dict)
+        self.rating = media_dict["contentAdvisoryRating"]
+        self.genre = media_dict["primaryGenreName"]
+        self.description = media_dict["longDescription"]
+        self.time = media_dict["trackTimeMillis"]
+        
+    def len(self):
+        return (self.time/60000)
+        
+    def title_words_num(self):
+        return len(self.description)
+    
 
 ## [PROBLEM 3] [150 POINTS]
 print("\n***** PROBLEM 3 *****\n")
