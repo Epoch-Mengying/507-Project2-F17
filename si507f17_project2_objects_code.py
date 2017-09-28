@@ -101,7 +101,7 @@ class Media(object):
     def __repr__(self):
         return "ITUNES MEDIA: {}".format(self.itunes_id)
         
-    def len(self):
+    def __len__(self):
         return 0
         
     def __contains__(self, titlename):
@@ -139,9 +139,11 @@ class Song(Media):
         self.genre = media_dict["primaryGenreName"]
         self.time = media_dict["trackTimeMillis"]
         
-    def len(self):
+    def __len__(self):
         return (self.time/1000)
 
+# len(object) __len__
+# object.len() vs len
 
 ### class Movie:
 
@@ -160,10 +162,10 @@ class Movie(Media):
         self.rating = media_dict["contentAdvisoryRating"]
         self.genre = media_dict["primaryGenreName"]
         self.description = media_dict["longDescription"]
-        self.time = media_dict["trackTimeMillis"]
+        self.time = media_dict.get('trackTimeMillis', 0)
         
-    def len(self):
-        return (self.time/60000)
+    def __len__(self):
+        return (int(self.time/60000))
         
     def title_words_num(self):
         return len(self.description)
@@ -194,8 +196,17 @@ movie_samples = sample_get_cache_itunes_data("love","movie")["results"]
 ## a list of Movie objects saved in a variable movie_list.
 
 ## You may use any method of accumulation to make that happen.
+media_list = list()
+for item in media_samples:
+    media_list.append(Media(item))
 
+song_list = list()
+for item in song_samples:
+    song_list.append(Song(item))
 
+movie_list = list()
+for item in movie_samples:
+    movie_list.append(Movie(item))
 
 
 ## [PROBLEM 4] [200 POINTS]
