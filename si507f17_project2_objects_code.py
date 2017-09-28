@@ -6,6 +6,7 @@ import requests
 import json
 import unittest
 
+
 ## Instructions for each piece to be completed for this project can be found in the file, below.
 
 ## To see whether your problem solutions are passing the tests, you should run the Python file:
@@ -140,7 +141,7 @@ class Song(Media):
         self.time = media_dict["trackTimeMillis"]
         
     def __len__(self):
-        return (self.time/1000)
+        return (int(self.time/1000))
 
 # len(object) __len__
 # object.len() vs len
@@ -238,7 +239,16 @@ print("\n***** PROBLEM 4 *****\n")
 
 ## HINT #4: Write or draw out your plan for this before you actually start writing the code! That will make it much easier.
 
-
+def write_files(result_list,csv_name):
+    with open(csv_name, "w") as csvfile:
+        csvfile.write("title, artist, id, url, length\n")
+        for item in result_list:
+            csvfile.write("\"{}\", {}, {}, {}, {}\n".format(item.title,item.author,str(item.itunes_id),item.itunes_URL,str(len(item))))
+      
+write_files(media_list, "media.csv")
+write_files(movie_list, "movie.csv")
+write_files(song_list, "song.csv")
+        
 
 
 
